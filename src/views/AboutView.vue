@@ -1,5 +1,22 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <header-component />
+  <back-to-top />
+  <div></div>
+  <footer-component />
 </template>
+
+<script>
+import HeaderComponent from "@/components/HeaderComponent.vue";
+import BackToTop from "@/components/BackToTop.vue";
+import FooterComponent from "@/components/FooterComponent.vue";
+export default {
+  components: {
+    HeaderComponent,
+    BackToTop,
+    FooterComponent,
+  },
+  setup() {
+    return {};
+  },
+};
+</script>
