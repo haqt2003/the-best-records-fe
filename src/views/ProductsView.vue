@@ -189,9 +189,11 @@
         </div>
         <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-6 mt-2 sm:mt-0">
           <div
+            @click.prevent="goToDetails($event)"
             class="bg-[#EEF2F5] cursor-pointer rounded-xl px-8 h-[140px] flex items-center justify-between sm:block sm:h-[300px] xl:h-[380px] relative"
             v-for="(item, index) in paginateProducts"
             :key="index"
+            :data-id="item._id"
           >
             <img
               :src="item.img"
@@ -222,18 +224,24 @@
               </div>
 
               <div
-                class="absolute hidden sm:flex sm:right-6 sm:bottom-6 xl:right-8 xl:bottom-8 cursor-pointer w-[60px] h-[60px] rounded-full bg-white items-center justify-center hover:bg-yellow transition"
+                @click.prevent="addToCart($event)"
+                class="absolute hidden sm:flex sm:right-6 sm:bottom-6 xl:right-8 xl:bottom-8 cursor-pointer w-[60px] h-[60px] rounded-full bg-white items-center justify-center hover:bg-yellow transition add"
               >
-                <img src="../assets/images/products/add-to-cart.svg" alt="" />
+                <img
+                  src="../assets/images/products/add-to-cart.svg"
+                  alt=""
+                  class="add"
+                />
               </div>
             </div>
             <div
-              class="flex sm:hidden cursor-pointer w-[52px] h-[52px] rounded-full bg-white items-center justify-center hover:bg-yellow transition"
+              @click.prevent="addToCart($event)"
+              class="flex sm:hidden cursor-pointer w-[52px] h-[52px] rounded-full bg-white items-center justify-center hover:bg-yellow transition add"
             >
               <img
                 src="../assets/images/products/add-to-cart.svg"
                 alt=""
-                class="w-5"
+                class="w-5 add"
               />
             </div>
             <img
@@ -249,6 +257,7 @@
           :items-per-page="itemsPerPage"
           :max-pages-shown="2"
           v-model="currentPage"
+          @click="onClickHandler"
           paginate-buttons-class="btn-paginate"
           active-page-class="btn-paginate-active"
           back-button-class="back-btn-paginate"
@@ -273,19 +282,25 @@
 
 <script>
 import { ref, onMounted, computed } from "vue";
+import { useStore } from "vuex";
 import HeaderComponent from "@/components/HeaderComponent.vue";
 import BackToTop from "@/components/BackToTop.vue";
 import FooterComponent from "@/components/FooterComponent.vue";
-// import { VueAwesomePaginate } from "vue-awesome-paginate";
-import { getProductList } from "@/composables/useProduct";
+import { VueAwesomePaginate } from "vue-awesome-paginate";
+import ProductAPI from "../apis/modules/product";
+import { useRouter } from "vue-router";
+import getToken from "@/composables/getToken";
 export default {
   components: {
     HeaderComponent,
     FooterComponent,
     BackToTop,
-    // VueAwesomePaginate,
+    VueAwesomePaginate,
   },
   setup() {
+    const store = useStore();
+    const router = useRouter();
+
     const currentType = ref("all");
     const filterPrice = ref(5000000);
     const currentPage = ref(1);
@@ -300,6 +315,32 @@ export default {
 
     const isOpenFilter = ref(false);
 
+    function addToCart(e) {
+      const token = getToken();
+      if (token) {
+        try {
+          if (store.state.user.name !== "") {
+            store.dispatch("addToCart", {
+              userID: store.state.user.id,
+              productID: e.target.closest("[data-id]").dataset.id,
+              quantity: 1,
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        router.push("/login");
+      }
+    }
+
+    function goToDetails(e) {
+      if (!e.target.classList.contains("add"))
+        router.push({
+          path: `/products/${e.target.closest("[data-id]").dataset.id}`,
+        });
+    }
+
     function formatCurrency(value) {
       if (value) {
         return new Intl.NumberFormat("vi-VN", {
@@ -310,7 +351,8 @@ export default {
     }
 
     const getProducts = async () => {
-      products.value = await getProductList();
+      const response = await ProductAPI.getProductList();
+      products.value = response.data.products;
       tempProducts.value = products.value;
     };
 
@@ -344,6 +386,10 @@ export default {
       isOpenFilter.value = !isOpenFilter.value;
     }
 
+    function onClickHandler() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
     function updateFilterPrice() {
       if (currentType.value === "all") {
         tempProducts.value = products.value.filter(
@@ -366,8 +412,8 @@ export default {
       }
     }
 
-    onMounted(() => {
-      getProducts();
+    onMounted(async () => {
+      await getProducts();
       updateItemsPerPage();
     });
 
@@ -380,12 +426,15 @@ export default {
       itemsPerPage,
       paginateProducts,
       isOpenFilter,
+      addToCart,
+      goToDetails,
       formatCurrency,
       getProducts,
       selectFilter,
       selectType,
       toggleFilter,
       updateFilterPrice,
+      onClickHandler,
     };
   },
 };
@@ -420,5 +469,57 @@ export default {
     font-family: "Nunito";
     font-size: 16px;
   }
+}
+
+input[type="range"] {
+  /* removing default appearance */
+  -webkit-appearance: none;
+  appearance: none;
+  /* creating a custom design */
+  cursor: pointer;
+  outline: none;
+  /*  slider progress trick  */
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+/* Track: webkit browsers */
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 15px;
+  background: #ccc;
+  border-radius: 16px;
+}
+
+/* Track: Mozilla Firefox */
+input[type="range"]::-moz-range-track {
+  height: 15px;
+  background: #ccc;
+  border-radius: 16px;
+}
+
+/* Thumb: webkit */
+input[type="range"]::-webkit-slider-thumb {
+  /* removing default appearance */
+  -webkit-appearance: none;
+  appearance: none;
+  /* creating a custom design */
+  height: 15px;
+  width: 15px;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 2px solid #f6d776;
+  /*  slider progress trick  */
+  box-shadow: -407px 0 0 400px #f6d776;
+}
+
+/* Thumb: Firefox */
+input[type="range"]::-moz-range-thumb {
+  height: 15px;
+  width: 15px;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 1px solid #f6d776;
+  /*  slider progress trick  */
+  box-shadow: -407px 0 0 400px #f6d776;
 }
 </style>

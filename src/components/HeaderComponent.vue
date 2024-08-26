@@ -46,19 +46,19 @@
           />
         </div>
       </div>
-      <div class="cursor-pointer relative" @click="goCart">
-        <router-link to="/cart"
-          ><img
-            src="../assets/images/commons/cart-icon-black.svg"
-            alt=""
-            class="w-8 sm:w-9"
-        /></router-link>
+      <router-link to="/cart" class="cursor-pointer relative" @click="goCart">
+        <img
+          src="../assets/images/commons/cart-icon-black.svg"
+          alt=""
+          class="w-8 sm:w-9"
+        />
         <div
+          v-if="totalCartItems"
           class="absolute top-0 right-0 w-[14px] h-[14px] sm:w-4 sm:h-4 bg-black text-white flex items-center justify-center rounded-full text-[10px]"
         >
-          2
+          {{ totalCartItems }}
         </div>
-      </div>
+      </router-link>
       <div @click="toggleMenu" class="cursor-pointer relative">
         <img
           src="../assets/images/commons/user-icon-black.svg"
@@ -67,7 +67,7 @@
         />
         <div
           v-if="!isUser && isShowMenu"
-          class="absolute right-0 top-14 p-1 border-[#D5D5D5] border-[0.5px] rounded-lg w-[194px] shadow-[2px_2px_4px_rgba(0,0,0,0.2)]"
+          class="absolute z-10 bg-white right-0 top-14 p-1 border-[#D5D5D5] border-[0.5px] rounded-lg w-[194px] shadow-[2px_2px_4px_rgba(0,0,0,0.2)]"
         >
           <router-link
             to="/login"
@@ -94,10 +94,10 @@
         </div>
         <div
           v-if="isUser && isShowMenu"
-          class="absolute right-0 top-14 p-1 border-[#D5D5D5] border-[0.5px] rounded-lg w-[194px] shadow-[2px_2px_4px_rgba(0,0,0,0.2)]"
+          class="absolute z-10 bg-white right-0 top-14 p-1 border-[#D5D5D5] border-[0.5px] rounded-lg w-[194px] shadow-[2px_2px_4px_rgba(0,0,0,0.2)]"
         >
           <router-link
-            to="/login"
+            to="/user-info"
             class="h-[38px] hover:bg-grey rounded-[5px] flex items-center pl-4"
           >
             <img
@@ -110,7 +110,7 @@
             >
           </router-link>
           <router-link
-            to="/signup"
+            to="/settings"
             class="h-[38px] hover:bg-grey rounded-[5px] flex items-center pl-4 mt-1"
           >
             <img
@@ -125,6 +125,7 @@
           ></div>
           <router-link
             to="/login"
+            @click="logout"
             class="h-[38px] hover:bg-grey rounded-[5px] flex items-center pl-4 mt-[10px]"
           >
             <img
@@ -141,16 +142,22 @@
 </template>
 
 <script>
-import { ref, onMounted, watch } from "vue";
-// import { useStore } from "vuex";
+import { ref, onMounted, watch, computed } from "vue";
+import { useStore } from "vuex";
 import { useRoute } from "vue-router";
+import getToken from "@/composables/getToken";
+import removeToken from "@/composables/removeToken";
 export default {
   setup() {
     const route = useRoute();
-    // const store = useStore();
+    const store = useStore();
     const isSearch = ref(false);
-    const isUser = ref(false);
+    const isUser = getToken();
     const isShowMenu = ref(false);
+
+    const totalCartItems = computed(() =>
+      store.getters.totalCartItems < 100 ? store.getters.totalCartItems : "99+"
+    );
 
     function backHome() {
       document.querySelector(".home-link").style.opacity = 1;
@@ -182,6 +189,11 @@ export default {
       isShowMenu.value = !isShowMenu.value;
     }
 
+    function logout() {
+      store.dispatch("logout");
+      removeToken();
+    }
+
     onMounted(() => {
       getPath();
     });
@@ -197,9 +209,11 @@ export default {
       isSearch,
       isShowMenu,
       isUser,
+      totalCartItems,
       backHome,
       getPath,
       goCart,
+      logout,
       toggleMenu,
       toggleSearch,
     };

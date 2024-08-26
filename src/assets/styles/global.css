@@ -179,54 +179,89 @@ body {
   background-color: #222222;
 }
 
-input[type="range"] {
-  /* removing default appearance */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
   -webkit-appearance: none;
-  appearance: none;
-  /* creating a custom design */
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Ẩn checkbox gốc */
+.custom-checkbox input {
+  display: none;
+}
+
+.custom-checkbox1 input {
+  display: none;
+}
+
+/* Tạo kiểu dáng cho phần tử tùy chỉnh */
+.custom-checkbox {
+  display: flex;
+  align-items: center;
   cursor: pointer;
-  outline: none;
-  /*  slider progress trick  */
-  overflow: hidden;
-  border-radius: 16px;
 }
 
-/* Track: webkit browsers */
-input[type="range"]::-webkit-slider-runnable-track {
-  height: 15px;
-  background: #ccc;
-  border-radius: 16px;
+.custom-checkbox1 {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 
-/* Track: Mozilla Firefox */
-input[type="range"]::-moz-range-track {
-  height: 15px;
-  background: #ccc;
-  border-radius: 16px;
-}
-
-/* Thumb: webkit */
-input[type="range"]::-webkit-slider-thumb {
-  /* removing default appearance */
-  -webkit-appearance: none;
-  appearance: none;
-  /* creating a custom design */
-  height: 15px;
-  width: 15px;
+/* Phần tử giả tạo kiểu dáng cho checkbox */
+.custom-checkbox .checkmark {
+  width: 20px;
+  height: 20px;
   background-color: #fff;
-  border-radius: 50%;
-  border: 2px solid #f6d776;
-  /*  slider progress trick  */
-  box-shadow: -407px 0 0 400px #f6d776;
+  border-radius: 4px;
+  position: relative;
+  border-color: #f6d776;
+  border-width: 1px;
 }
 
-/* Thumb: Firefox */
-input[type="range"]::-moz-range-thumb {
-  height: 15px;
-  width: 15px;
+.custom-checkbox1 .checkmark {
+  width: 20px;
+  height: 20px;
   background-color: #fff;
-  border-radius: 50%;
-  border: 1px solid #f6d776;
-  /*  slider progress trick  */
-  box-shadow: -407px 0 0 400px #f6d776;
+  border-radius: 4px;
+  position: relative;
+  border-color: #222;
+  border-width: 1px;
+}
+
+/* Tạo dấu tích */
+.custom-checkbox input:checked + .checkmark {
+  background-color: #222; /* Màu của dấu tích */
+}
+
+.custom-checkbox1 input:checked + .checkmark {
+  background-color: #222; /* Màu của dấu tích */
+}
+
+/* Tạo dấu tích trong checkbox */
+.checkmark::after {
+  content: "";
+  position: absolute;
+  left: 7.5px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  opacity: 0;
+}
+
+/* Hiển thị dấu tích khi checkbox được chọn */
+.custom-checkbox input:checked + .checkmark::after {
+  opacity: 1;
+}
+
+.custom-checkbox1 input:checked + .checkmark::after {
+  opacity: 1;
 }

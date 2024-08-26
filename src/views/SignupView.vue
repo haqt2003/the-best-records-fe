@@ -6,7 +6,7 @@
       class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 sm:left-auto sm:-translate-x-0 py-10 px-10 w-[90%] sm:w-auto sm:right-[15%] sm:py-12 sm:px-14 bg-white rounded-xl"
     >
       <h1 class="font-[Anton] text-[36px] text-center">ĐĂNG KÝ</h1>
-      <form @submit.prevent="" action="" class="mt-10">
+      <form @submit.prevent="register" action="" class="mt-10">
         <label v-if="step === 1" for="name" class="font-semibold"
           >Họ và tên</label
         >
@@ -28,25 +28,42 @@
           id="email"
           type="email"
           placeholder="example@gmail.com"
+          autocomplete="email"
           class="block outline-none border-b-[0.1px] border-black py-[10px] w-full sm:w-[310px]"
         />
         <label v-if="step === 2" for="password" class="font-semibold mt-8 block"
           >Mật khẩu</label
         >
-        <div class="">
+        <div class="relative">
           <input
             v-if="step === 2"
             v-model="password"
             id="password"
             type="password"
             placeholder="******"
+            autocomplete="password"
             class="block outline-none border-b-[0.1px] border-black py-[10px] w-full sm:w-[310px]"
           />
+          <div
+            @click="togglePassword"
+            class="absolute right-4 top-2 cursor-pointer"
+          >
+            <img
+              v-if="isShowPassword && password"
+              src="../assets/images/login/showPassword.svg"
+              alt=""
+            />
+            <img
+              v-if="!isShowPassword && password"
+              src="../assets/images/login/hidePassword.svg"
+              alt=""
+            />
+          </div>
         </div>
         <button
           @click="nextStep"
           v-if="step === 1"
-          type="submit"
+          type="button"
           class="w-full sm:w-[310px] bg-yellow rounded-xl mt-7 font-semibold h-[56px] hover:bg-yellowHover"
         >
           Tiếp tục
@@ -82,12 +99,29 @@
 
 <script>
 import { ref } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 export default {
   setup() {
+    const store = useStore();
+    const router = useRouter();
+
     const step = ref(1);
     const name = ref(null);
     const email = ref(null);
     const password = ref(null);
+
+    const isShowPassword = ref(false);
+
+    function togglePassword() {
+      isShowPassword.value = !isShowPassword.value;
+      const passwordField = document.getElementById("password");
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+      } else {
+        passwordField.type = "password";
+      }
+    }
 
     function nextStep() {
       if (name.value) {
@@ -105,7 +139,32 @@ export default {
       }
     }
 
-    return { step, name, email, password, nextStep, inputName };
+    async function register() {
+      try {
+        await store.dispatch("register", {
+          name: name.value,
+          email: email.value,
+          password: password.value,
+        });
+        if (store.state.user.name !== "") {
+          router.push("/");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    return {
+      step,
+      name,
+      email,
+      password,
+      isShowPassword,
+      nextStep,
+      inputName,
+      register,
+      togglePassword,
+    };
   },
 };
 </script>

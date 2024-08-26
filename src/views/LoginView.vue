@@ -6,20 +6,24 @@
       class="absolute top-1/2 -translate-y-1/2 left-1/2 sm:left-auto sm:-translate-x-0 -translate-x-1/2 sm:right-[15%] py-10 px-10 sm:py-12 sm:px-14 bg-white rounded-xl w-[88%] sm:w-auto"
     >
       <h1 class="font-[Anton] text-[36px] text-center">ĐĂNG NHẬP</h1>
-      <form @submit.prevent="" action="" class="mt-10">
+      <form @submit.prevent="login" action="" class="mt-10">
         <label for="email" class="font-semibold">Email</label>
         <input
+          v-model="email"
           id="email"
           type="email"
           placeholder="example@gmail.com"
+          autocomplete="email"
           class="block outline-none border-b-[0.1px] border-black py-[10px] w-full sm:w-[310px]"
         />
         <label for="password" class="font-semibold mt-8 block">Mật khẩu</label>
         <div class="relative">
           <input
+            v-model="password"
             id="password"
             type="password"
             placeholder="******"
+            autocomplete="password"
             class="block outline-none border-b-[0.1px] border-black py-[10px] w-full sm:w-[310px]"
           />
           <div
@@ -27,12 +31,12 @@
             class="absolute right-4 top-2 cursor-pointer"
           >
             <img
-              v-if="isShowPassword"
+              v-if="isShowPassword && password"
               src="../assets/images/login/showPassword.svg"
               alt=""
             />
             <img
-              v-if="!isShowPassword"
+              v-if="!isShowPassword && password"
               src="../assets/images/login/hidePassword.svg"
               alt=""
             />
@@ -69,8 +73,13 @@
 
 <script>
 import { ref } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 export default {
   setup() {
+    const router = useRouter();
+    const store = useStore();
+
     const email = ref(null);
     const password = ref(null);
 
@@ -86,7 +95,21 @@ export default {
       }
     }
 
-    return { email, password, isShowPassword, togglePassword };
+    async function login() {
+      try {
+        await store.dispatch("login", {
+          email: email.value,
+          password: password.value,
+        });
+        if (store.state.user.name !== "") {
+          router.push("/");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    return { email, password, isShowPassword, togglePassword, login };
   },
 };
 </script>
