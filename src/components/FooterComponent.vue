@@ -3,7 +3,9 @@
     class="max-w-[1440px] px-5 sm:px-[60px] xl:px-[120px] mx-auto pb-8 lg:pb-12"
   >
     <div class="mx-auto">
-      <img src="../assets/images/commons/logo.svg" alt="" class="mx-auto" />
+      <router-link to="/"
+        ><img src="../assets/images/commons/logo.svg" alt="" class="mx-auto"
+      /></router-link>
       <div
         @click="getPath"
         class="font-bold gap-10 sm:gap-[60px] flex col-span-2 mx-auto justify-center mt-6 text-[14px] sm:text-[16px]"

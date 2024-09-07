@@ -16,6 +16,8 @@ export default createStore({
       cart: [],
       order: [],
     },
+    paylist: [],
+    payment: "",
   },
   getters: {
     totalCartItems(state) {
@@ -24,6 +26,12 @@ export default createStore({
             return accumulator + currentValue.quantity;
           }, 0)
         : 0;
+    },
+    getPayList(state) {
+      return state.paylist;
+    },
+    getPayment(state) {
+      return state.payment;
     },
   },
   mutations: {
@@ -63,6 +71,10 @@ export default createStore({
     },
     DELETE_CART(state) {
       state.user.cart = [];
+    },
+    SET_PAY(state, payload) {
+      state.paylist = payload.list;
+      state.payment = payload.total;
     },
     LOG_OUT(state) {
       state.user.id = "";

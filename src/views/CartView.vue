@@ -106,11 +106,13 @@
         >
         <div class="flex items-center mt-5 xl:mt-8">
           <input
+            v-model="discountCode"
             type="text"
             class="rounded-lg h-[48px] bg-grey px-7 text-[14px] font-light outline-none w-[70%] xl:w-[60%]"
             placeholder="Nhập mã giảm giá"
           />
           <div
+            @click="applyDiscount"
             class="ml-4 lg:ml-6 bg-yellow hover:bg-yellowHover rounded-lg font-semibold text-[14px] xl:text-[16px] h-[48px] flex items-center justify-center w-[35%] xl:w-[28%] cursor-pointer"
           >
             Áp dụng
@@ -173,7 +175,7 @@
             <div class="">
               <span class="block">Tổng tiền hàng</span>
               <span class="mt-6 block">Phí ship</span>
-              <span class="mt-6 block">Giảm giá</span>
+              <span v-if="discount" class="mt-6 block">Giảm giá</span>
               <span class="mt-6 block">Tổng thanh toán</span>
             </div>
             <div class="">
@@ -183,7 +185,7 @@
               <span class="mt-6 block text-right font-semibold">{{
                 formatCurrency(shipCost)
               }}</span>
-              <span class="mt-6 block text-right font-semibold"
+              <span v-if="discount" class="mt-6 block text-right font-semibold"
                 >-{{ formatCurrency(discount) }}</span
               >
               <span class="mt-6 block text-right font-semibold">{{
@@ -192,6 +194,7 @@
             </div>
           </div>
           <div
+            @click="goToPay()"
             class="bg-yellow hover:bg-yellowHover cursor-pointer text-center py-4 font-semibold w-[70%] mt-8 rounded-lg mx-auto"
           >
             Thanh toán
@@ -238,7 +241,8 @@ export default {
 
     const totalProducts = ref(null);
     const shipCost = ref(30000);
-    const discount = ref(200000);
+    const discount = ref(0);
+    const discountCode = ref("");
     const total = computed(
       () => totalProducts.value + shipCost.value - discount.value
     );
@@ -338,6 +342,15 @@ export default {
         });
         payList.value = [...cartList.value];
         isSelectAll.value = true;
+        totalProducts.value = payList.value.reduce(
+          (accumulator, currentValue) => {
+            return (
+              accumulator +
+              Number(currentValue.product.price) * currentValue.quantity
+            );
+          },
+          0
+        );
       } else {
         const items = document.querySelectorAll(".itemCheck");
         items.forEach((item) => {
@@ -353,6 +366,15 @@ export default {
       cartList.value = [];
     }
 
+    function applyDiscount() {
+      if (discountCode.value === "TBR") discount.value = 200000;
+    }
+
+    function goToPay() {
+      router.push({ name: "infooder" });
+      store.commit("SET_PAY", { list: payList.value, total: total.value });
+    }
+
     onMounted(async () => {
       await getCartList();
     });
@@ -363,6 +385,7 @@ export default {
       totalProducts,
       shipCost,
       discount,
+      discountCode,
       total,
       isSelectAll,
       isCheckFull,
@@ -374,6 +397,8 @@ export default {
       deleteItem,
       selectAll,
       deleteAll,
+      applyDiscount,
+      goToPay,
     };
   },
 };

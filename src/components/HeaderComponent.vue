@@ -2,19 +2,20 @@
   <div
     class="max-w-[1440px] px-5 sm:px-[60px] xl:px-[120px] flex justify-between xl:justify-normal xl:grid xl:grid-cols-4 items-center mt-6 xl:mt-2 mx-auto"
   >
-    <router-link to="/" class="float-left hidden xl:block" @click="backHome"
-      ><img src="../assets/images/commons/logo.svg" alt=""
+    <router-link to="/" class="float-left hidden xl:block"
+      ><img src="../assets/images/commons/logo.svg" alt="" class="w-[120px]"
     /></router-link>
 
-    <div
-      @click="getPath"
-      class="font-bold gap-[60px] hidden xl:flex col-span-2 mx-auto"
-    >
+    <div class="font-bold gap-[60px] hidden xl:flex col-span-2 mx-auto">
       <router-link to="/" class="opacity-60 home-link"> TRANG CHỦ </router-link>
-      <router-link to="/about" class="opacity-60 about-link">
+      <router-link to="/about" @click="getPath" class="opacity-60 about-link">
         VỀ CHÚNG TÔI
       </router-link>
-      <router-link to="/products" class="opacity-60 store-link">
+      <router-link
+        to="/products"
+        @click="getPath"
+        class="opacity-60 store-link"
+      >
         CỬA HÀNG
       </router-link>
     </div>
@@ -159,11 +160,11 @@ export default {
       store.getters.totalCartItems < 100 ? store.getters.totalCartItems : "99+"
     );
 
-    function backHome() {
-      document.querySelector(".home-link").style.opacity = 1;
-      document.querySelector(".about-link").style.opacity = 0.6;
-      document.querySelector(".store-link").style.opacity = 0.6;
-    }
+    // function backHome() {
+    //   document.querySelector(".home-link").style.opacity = 1;
+    //   document.querySelector(".about-link").style.opacity = 0.6;
+    //   document.querySelector(".store-link").style.opacity = 0.6;
+    // }
 
     function getPath() {
       const path = route.path;
@@ -210,7 +211,7 @@ export default {
       isShowMenu,
       isUser,
       totalCartItems,
-      backHome,
+      // backHome,
       getPath,
       goCart,
       logout,

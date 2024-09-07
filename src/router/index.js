@@ -40,6 +40,13 @@ const routes = [
     beforeEnter: requireAuth,
   },
   {
+    path: "/info-order",
+    name: "infooder",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/InfoOrder.vue"),
+    beforeEnter: requireAuth,
+  },
+  {
     path: "/user-info",
     name: "userinfo",
     component: () =>
