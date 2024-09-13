@@ -13,6 +13,7 @@
       <div class="w-full lg:w-[65%]">
         <div class="flex flex-wrap justify-between">
           <label
+            :class="{ active: name }"
             for="name"
             class="bg-grey h-[76px] cursor-pointer w-full mt-5 lg:mt-0 lg:w-[48%] px-5 py-3 rounded-lg border-[1px] border-grey block"
           >
@@ -25,10 +26,12 @@
               type="text"
               name=""
               id="name"
+              :class="{ activeInput: name }"
               class="outline-none bg-grey mt-1 font-semibold w-full"
             />
           </label>
           <label
+            :class="{ active: phonenumber }"
             for="phonenumber"
             class="bg-grey h-[76px] cursor-pointer w-full mt-5 lg:mt-0 lg:w-[48%] px-5 py-3 rounded-lg border-[1px] border-grey block"
           >
@@ -41,16 +44,21 @@
               type="tel"
               name=""
               id="phonenumber"
+              :class="{ activeInput: phonenumber }"
               class="outline-none bg-grey mt-1 font-semibold w-full"
             />
           </label>
           <div
             @click="toggleList($event)"
+            :class="{ active: province }"
             class="bg-grey relative h-[76px] cursor-pointer w-full mt-5 lg:mt-8 px-5 py-3 rounded-lg border-[1px] border-grey block"
           >
             <span class="text-[14px] opacity-60 block">Tỉnh/Thành phố</span>
-            <h1 class="mt-1 block font-semibold opacity-60">
-              Chọn Tỉnh/Thành phố
+            <h1
+              :class="{ fullOp: province }"
+              class="mt-1 block font-semibold opacity-60"
+            >
+              {{ province || "Chọn Tỉnh/Thành phố" }}
             </h1>
             <img
               src="../assets/images/commons/arrow-footer.svg"
@@ -76,12 +84,16 @@
           </div>
           <div class="flex w-full flex-wrap justify-between">
             <div
+              :class="{ active: district }"
               @click="toggleList($event)"
               class="bg-grey relative h-[76px] cursor-pointer w-full lg:w-[48%] mt-5 lg:mt-8 px-5 py-3 rounded-lg border-[1px] border-grey block"
             >
               <span class="text-[14px] opacity-60 block">Quận/Huyện</span>
-              <h1 class="mt-1 block font-semibold opacity-60 district">
-                Chọn Quận/Huyện
+              <h1
+                :class="{ fullOp: district }"
+                class="mt-1 block font-semibold opacity-60 district"
+              >
+                {{ district || "Chọn Quận/Huyện" }}
               </h1>
               <img
                 src="../assets/images/commons/arrow-footer.svg"
@@ -106,12 +118,16 @@
               </ul>
             </div>
             <div
+              :class="{ active: ward }"
               @click="toggleList($event)"
               class="bg-grey relative h-[76px] cursor-pointer w-full lg:w-[48%] mt-5 lg:mt-8 px-5 py-3 rounded-lg border-[1px] border-grey block"
             >
               <span class="text-[14px] opacity-60 block">Phường/Xã</span>
-              <h1 class="mt-1 block font-semibold opacity-60 ward">
-                Chọn Phường/Xã
+              <h1
+                :class="{ fullOp: ward }"
+                class="mt-1 block font-semibold opacity-60 ward"
+              >
+                {{ ward || "Chọn Phường/Xã" }}
               </h1>
               <img
                 src="../assets/images/commons/arrow-footer.svg"
@@ -133,18 +149,21 @@
             </div>
           </div>
           <label
+            :class="{ active: detail }"
             for="addr"
             class="bg-grey h-[76px] cursor-pointer w-full mt-5 lg:mt-8 px-5 py-3 rounded-lg border-[1px] border-grey block"
           >
             <span class="text-[14px] opacity-60 block">Địa chỉ cụ thể</span>
 
             <input
+              v-model="detail"
               @click="clickInput($event)"
               @blur="blurInput($event)"
               type="text"
               name=""
               id="addr"
               placeholder="VD: 140 Trần Phú, Quận Hà Đông, Hà Nội"
+              :class="{ activeInput: detail }"
               class="outline-none bg-grey mt-1 font-semibold w-full"
             />
           </label>
@@ -229,8 +248,12 @@ export default {
   setup() {
     const store = useStore();
 
-    const name = ref(null);
-    const phonenumber = ref(null);
+    const name = ref(store.state.user.name);
+    const phonenumber = ref(store.state.user.phonenumber);
+    const province = ref(store.state.user.address.province);
+    const district = ref(store.state.user.address.district);
+    const ward = ref(store.state.user.address.ward);
+    const detail = ref(store.state.user.address.detail);
 
     const payList = computed(() => store.getters.getPayList);
     const payment = computed(() => store.getters.getPayment);
@@ -312,6 +335,10 @@ export default {
     return {
       name,
       phonenumber,
+      province,
+      district,
+      ward,
+      detail,
       provinces,
       districts,
       wards,
@@ -337,5 +364,9 @@ export default {
 }
 .activeInput {
   background-color: #fff;
+}
+
+.fullOp {
+  opacity: 1 !important;
 }
 </style>

@@ -81,12 +81,14 @@
         <span class="text-[14px] mx-6">Hoặc</span>
         <div class="h-[0.5px] bg-black w-[68px]"></div>
       </div>
-      <div
-        class="w-full sm:w-[310px] cursor-pointer bg-none border-black border-[0.5px] rounded-xl mt-6 font-semibold h-[56px] flex justify-center items-center"
-      >
-        <img src="../assets/images/login/gg.svg" alt="" class="block" />
-        <span class="block ml-5">Đăng ký với Google</span>
-      </div>
+      <GoogleLogin :callback="callback" popup-type="TOKEN" class="w-full">
+        <button
+          class="sm:w-[310px] cursor-pointer w-full bg-none border-black border-[0.5px] rounded-xl mt-6 font-semibold h-[56px] flex justify-center items-center"
+        >
+          <img src="../assets/images/login/gg.svg" alt="" class="block" />
+          <span class="block ml-5">Đăng ký với Google</span>
+        </button>
+      </GoogleLogin>
       <span class="mt-7 block text-center"
         >Bạn đã có tài khoản?
         <router-link to="/login" class="font-semibold"
@@ -154,6 +156,17 @@ export default {
       }
     }
 
+    const callback = async (response) => {
+      try {
+        await store.dispatch("authGoogle", response.access_token);
+        if (store.state.user.name !== "") {
+          router.push("/");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     return {
       step,
       name,
@@ -164,6 +177,7 @@ export default {
       inputName,
       register,
       togglePassword,
+      callback,
     };
   },
 };

@@ -11,13 +11,21 @@ export default createStore({
     user: {
       id: "",
       name: "",
+      phonenumber: "",
       email: "",
+      address: {
+        province: "",
+        district: "",
+        ward: "",
+        detail: "",
+      },
       avatar: "",
       cart: [],
       order: [],
     },
     paylist: [],
     payment: "",
+    isOpenTab: false,
   },
   getters: {
     totalCartItems(state) {
@@ -27,11 +35,17 @@ export default createStore({
           }, 0)
         : 0;
     },
+    getUser(state) {
+      return state.user;
+    },
     getPayList(state) {
       return state.paylist;
     },
     getPayment(state) {
       return state.payment;
+    },
+    getStatusTab(state) {
+      return state.isOpenTab;
     },
   },
   mutations: {
@@ -39,6 +53,8 @@ export default createStore({
       state.user.id = payload.data._id;
       state.user.name = payload.data.name;
       state.user.email = payload.data.email;
+      state.user.phonenumber = payload.data.phonenumber;
+      state.user.address = payload.data.address;
       state.user.avatar = payload.data.avatar;
       state.user.cart = payload.data.cart;
       state.user.order = payload.data.order;
@@ -80,9 +96,19 @@ export default createStore({
       state.user.id = "";
       state.user.name = "";
       state.user.email = "";
+      state.user.phonenumber = "";
       state.user.avatar = "";
+      state.user.address = {
+        province: "",
+        district: "",
+        ward: "",
+        detail: "",
+      };
       state.user.cart = [];
       state.user.order = [];
+    },
+    TOGGLE_TAB(state) {
+      state.isOpenTab = !state.isOpenTab;
     },
   },
   actions: {
@@ -147,6 +173,19 @@ export default createStore({
     async register({ commit }, credentials) {
       try {
         const response = await AuthAPI.register(credentials);
+        if (!response) return false;
+        commit("SET_USER", {
+          data: response.data,
+        });
+        setToken(response.headers["authorization"], 3);
+      } catch (error) {
+        alert(error.response.data.error.message);
+        console.log(error);
+      }
+    },
+    async authGoogle({ commit }, credentials) {
+      try {
+        const response = await AuthAPI.authGoogle(credentials);
         if (!response) return false;
         commit("SET_USER", {
           data: response.data,

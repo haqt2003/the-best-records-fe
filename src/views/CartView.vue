@@ -165,11 +165,7 @@
             class="flex items-center font-semibold xl:justify-end cursor-pointer"
           >
             Thanh toán khi nhận hàng
-            <img
-              src="../assets/images/products/sort-icon.svg"
-              alt=""
-              class="w-5 ml-3"
-            />
+            <img src="../assets/images/cart/cod.svg" alt="" class="w-6 ml-2" />
           </div>
           <div class="mt-8 xl:mt-10 flex justify-between">
             <div class="">

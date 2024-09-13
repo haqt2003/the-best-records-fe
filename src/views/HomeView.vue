@@ -24,7 +24,11 @@
         </router-link>
       </div>
       <div class="xl:hidden">
-        <img src="../assets/images/home/menu-white.svg" alt="" />
+        <img
+          @click="openTab"
+          src="../assets/images/home/menu-white.svg"
+          alt=""
+        />
       </div>
       <div class="flex gap-4 sm:gap-5 justify-end">
         <div class="cursor-pointer hidden sm:block">
@@ -59,17 +63,21 @@
           />
           <div
             v-if="totalCartItems"
-            class="absolute top-0 right-0 w-[14px] h-[14px] sm:w-4 sm:h-4 bg-white text-black flex items-center justify-center rounded-full text-[10px]"
+            class="absolute top-0 right-0 w-[14px] h-[14px] sm:w-4 sm:h-4 font-semibold bg-white text-black flex items-center justify-center rounded-full text-[10px]"
           >
             {{ totalCartItems }}
           </div>
         </router-link>
         <div @click="toggleMenu" class="cursor-pointer relative">
           <img
+            v-if="!avatar"
             src="../assets/images/home/user-white.svg"
             alt=""
             class="w-8 sm:w-9"
           />
+          <div v-if="avatar" class="w-8 sm:w-9 rounded-full overflow-hidden">
+            <img :src="avatar" alt="" />
+          </div>
           <div
             v-if="!isUser && isShowMenu"
             class="absolute z-10 bg-white right-0 top-14 p-1 border-[#D5D5D5] border-[0.5px] rounded-lg w-[194px] shadow-[2px_2px_4px_rgba(0,0,0,0.2)]"
@@ -395,6 +403,12 @@ export default {
       store.getters.totalCartItems < 100 ? store.getters.totalCartItems : "99+"
     );
 
+    const avatar = store.state.user.avatar;
+
+    function openTab() {
+      store.commit("TOGGLE_TAB");
+    }
+
     function toggleSearch() {
       isSearch.value = !isSearch.value;
     }
@@ -446,6 +460,7 @@ export default {
       isSearch,
       isShowMenu,
       isUser,
+      avatar,
       totalCartItems,
       products,
       tempProducts,
@@ -455,6 +470,7 @@ export default {
       toggleSearch,
       selectType,
       goToDetails,
+      openTab,
     };
   },
 };

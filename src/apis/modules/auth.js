@@ -14,4 +14,9 @@ export default {
       password: data.password,
     });
   },
+  authGoogle(data) {
+    return Api().post("users/auth/google", {
+      access_token: data,
+    });
+  },
 };

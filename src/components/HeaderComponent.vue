@@ -20,7 +20,11 @@
       </router-link>
     </div>
     <div class="xl:hidden">
-      <img src="../assets/images/commons/menu-icon-black.svg" alt="" />
+      <img
+        @click="openTab()"
+        src="../assets/images/commons/menu-icon-black.svg"
+        alt=""
+      />
     </div>
     <div class="flex gap-4 sm:gap-5 justify-end">
       <div class="cursor-pointer hidden sm:block">
@@ -62,10 +66,14 @@
       </router-link>
       <div @click="toggleMenu" class="cursor-pointer relative">
         <img
+          v-if="!avatar"
           src="../assets/images/commons/user-icon-black.svg"
           alt=""
           class="w-8 sm:w-9"
         />
+        <div v-if="avatar" class="w-8 sm:w-9 rounded-full overflow-hidden">
+          <img :src="avatar" alt="" />
+        </div>
         <div
           v-if="!isUser && isShowMenu"
           class="absolute z-10 bg-white right-0 top-14 p-1 border-[#D5D5D5] border-[0.5px] rounded-lg w-[194px] shadow-[2px_2px_4px_rgba(0,0,0,0.2)]"
@@ -156,15 +164,14 @@ export default {
     const isUser = getToken();
     const isShowMenu = ref(false);
 
+    function openTab() {
+      store.commit("TOGGLE_TAB");
+    }
+
     const totalCartItems = computed(() =>
       store.getters.totalCartItems < 100 ? store.getters.totalCartItems : "99+"
     );
-
-    // function backHome() {
-    //   document.querySelector(".home-link").style.opacity = 1;
-    //   document.querySelector(".about-link").style.opacity = 0.6;
-    //   document.querySelector(".store-link").style.opacity = 0.6;
-    // }
+    const avatar = store.state.user.avatar;
 
     function getPath() {
       const path = route.path;
@@ -210,13 +217,14 @@ export default {
       isSearch,
       isShowMenu,
       isUser,
+      avatar,
       totalCartItems,
-      // backHome,
       getPath,
       goCart,
       logout,
       toggleMenu,
       toggleSearch,
+      openTab,
     };
   },
 };
