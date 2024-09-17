@@ -24,6 +24,7 @@
         @click="openTab()"
         src="../assets/images/commons/menu-icon-black.svg"
         alt=""
+        class="cursor-pointer"
       />
     </div>
     <div class="flex gap-4 sm:gap-5 justify-end">

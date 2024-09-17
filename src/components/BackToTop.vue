@@ -4,7 +4,7 @@
     v-if="isScrolled"
     src="@/assets/images/commons/back-to-top.svg"
     alt=""
-    class="fixed right-5 sm:right-10 bottom-14 z-[100] cursor-pointer"
+    class="fixed right-5 sm:right-10 bottom-14 z-30 cursor-pointer"
   />
 </template>
 

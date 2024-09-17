@@ -140,7 +140,10 @@
                 <li
                   v-for="ward in wards"
                   :key="ward.code"
-                  @click="choseItem($event)"
+                  @click="
+                    choseItem($event);
+                    choseWard($event);
+                  "
                   class="px-5 py-3 border-b hover:bg-grey"
                 >
                   {{ ward.name }}
@@ -220,12 +223,86 @@
               pháp lý của chúng tôi
             </p>
             <div
+              @click="submitOrder"
               class="mt-6 bg-yellow w-[70%] mx-auto cursor-pointer hover:bg-yellowHover font-semibold rounded-lg text-center py-4"
             >
               Đặt hàng
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+  <div
+    v-if="isOpenModal"
+    class="fixed top-0 left-0 w-full h-full px-5 bg-[rgba(0,0,0,0.4)] z-50"
+  >
+    <div
+      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] sm:w-[70%] max-w-[400px] bg-white rounded-xl py-9"
+    >
+      <img
+        src="../assets/images/commons/close.svg"
+        alt=""
+        class="w-8 absolute top-5 right-5 cursor-pointer"
+        @click="toggleModal"
+      />
+      <div v-if="!isOk" class="text-center mt-10">
+        <span class="block">Vui lòng điền đầy đủ thông tin</span>
+        <button
+          @click="toggleModal"
+          class="bg-yellow hover:bg-yellowHover rounded-lg px-5 py-3 mt-6 font-semibold"
+        >
+          OK
+        </button>
+      </div>
+      <div v-if="isOk" class="text-center mt-10">
+        <span class="block">Xác nhận đặt hàng?</span>
+        <div class="flex justify-center items-center gap-5 mt-8">
+          <span
+            @click="toggleModal"
+            class="px-8 cursor-pointer block rounded-lg"
+            >Hủy</span
+          >
+          <button
+            @click="submit"
+            class="bg-yellow hover:bg-yellowHover rounded-lg px-8 py-3"
+          >
+            Đặt hàng
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    v-if="isSuccess !== null"
+    class="fixed top-0 left-0 w-full h-full px-5 bg-[rgba(0,0,0,0.4)] z-50"
+  >
+    <div
+      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] sm:w-[70%] max-w-[400px] bg-white rounded-xl py-9"
+    >
+      <img
+        src="../assets/images/commons/close.svg"
+        alt=""
+        class="w-8 absolute top-5 right-5 cursor-pointer"
+        @click="toggleSuccess"
+      />
+      <div v-if="isSuccess" class="text-center mt-10">
+        <span class="block">Đặt hàng thành công!</span>
+        <button
+          @click="toggleSuccess"
+          class="bg-yellow hover:bg-yellowHover rounded-lg px-5 py-3 mt-6 font-semibold"
+        >
+          OK
+        </button>
+      </div>
+      <div v-if="isSuccess === false" class="text-center mt-10">
+        <span class="block">Đặt hàng thất bại!</span>
+        <button
+          @click="toggleSuccess"
+          class="bg-yellow hover:bg-yellowHover rounded-lg px-5 py-3 mt-6 font-semibold"
+        >
+          OK
+        </button>
       </div>
     </div>
   </div>
@@ -239,6 +316,7 @@ import axios from "axios";
 import HeaderComponent from "@/components/HeaderComponent.vue";
 import BackToTop from "@/components/BackToTop.vue";
 import FooterComponent from "@/components/FooterComponent.vue";
+import OrderAPI from "../apis/modules/order";
 export default {
   components: {
     HeaderComponent,
@@ -262,14 +340,24 @@ export default {
     const districts = ref(null);
     const wards = ref(null);
 
+    const isOpenModal = ref(false);
+    const isOk = ref(false);
+    const isSuccess = ref(null);
+
+    function toggleModal() {
+      isOpenModal.value = !isOpenModal.value;
+    }
+
+    function toggleSuccess() {
+      isSuccess.value = null;
+    }
+
     async function getProvince() {
       try {
         const response = await axios.get(
           "https://provinces.open-api.vn/api?depth=3"
         );
         provinces.value = response.data;
-        console.log(payList.value);
-        console.log(payment.value);
       } catch (error) {
         console.log(error);
       }
@@ -285,15 +373,21 @@ export default {
     }
 
     function choseProvince(e) {
+      province.value = e.target.innerText;
       districts.value = provinces.value.find(
         (province) => Number(province.code) === Number(e.target.dataset.code)
       ).districts;
     }
 
     function choseDistrict(e) {
+      district.value = e.target.innerText;
       wards.value = districts.value.find(
         (district) => Number(district.code) === Number(e.target.dataset.code)
       ).wards;
+    }
+
+    function choseWard(e) {
+      ward.value = e.target.innerText;
     }
 
     function clickInput(e) {
@@ -329,9 +423,50 @@ export default {
       e.target.closest("div").classList.add("active");
     }
 
+    function submitOrder() {
+      if (
+        name.value &&
+        phonenumber.value &&
+        province.value &&
+        district.value &&
+        ward.value &&
+        detail.value
+      ) {
+        isOk.value = true;
+      } else {
+        isOk.value = false;
+      }
+      toggleModal();
+    }
+
+    async function submit() {
+      try {
+        const response = await OrderAPI.newOrder({
+          products: payList.value,
+          owner: store.state.user.id,
+          name: name.value,
+          phonenumber: phonenumber.value,
+          address: {
+            province: province.value,
+            district: district.value,
+            ward: ward.value,
+            detail: detail.value,
+          },
+          total: payment.value,
+        });
+        if (response.data.success === "true") {
+          isSuccess.value = true;
+        }
+      } catch (error) {
+        isSuccess.value = false;
+      }
+      toggleModal();
+    }
+
     onMounted(async () => {
       await getProvince();
     });
+
     return {
       name,
       phonenumber,
@@ -344,13 +479,21 @@ export default {
       wards,
       payList,
       payment,
+      isOpenModal,
+      isOk,
+      isSuccess,
       clickInput,
       blurInput,
       toggleList,
       choseItem,
       choseProvince,
       choseDistrict,
+      choseWard,
       formatCurrency,
+      toggleModal,
+      submitOrder,
+      submit,
+      toggleSuccess,
     };
   },
 };

@@ -69,9 +69,9 @@
         <div class="flex justify-between items-center">
           <span class="block font-semibold">Chọn thể loại</span>
           <div class="flex items-center relative">
-            <span @click="toggleFilter" class="font-semibold"
-              >Sắp xếp theo mới nhất</span
-            >
+            <span @click="toggleFilter" class="font-semibold">{{
+              sortTitle
+            }}</span>
             <img
               @click="toggleFilter"
               src="../assets/images/products/sort-icon.svg"
@@ -150,9 +150,9 @@
       </div>
       <div class="col-span-4 sm:col-span-3 relative">
         <div class="hidden sm:flex cursor-pointer absolute -top-14 right-0">
-          <span @click="toggleFilter" class="font-semibold text-[18px]"
-            >Sắp xếp theo mới nhất</span
-          >
+          <span @click="toggleFilter" class="font-semibold text-[18px]">{{
+            sortTitle
+          }}</span>
           <img
             @click="toggleFilter"
             src="../assets/images/products/sort-icon.svg"
@@ -301,6 +301,7 @@ export default {
     const store = useStore();
     const router = useRouter();
 
+    const sortTitle = ref("Sắp xếp theo cũ nhất");
     const currentType = ref("all");
     const filterPrice = ref(5000000);
     const currentPage = ref(1);
@@ -352,6 +353,7 @@ export default {
 
     const getProducts = async () => {
       const response = await ProductAPI.getProductList();
+      console.log(response.data.products);
       products.value = response.data.products;
       tempProducts.value = products.value;
     };
@@ -378,7 +380,17 @@ export default {
     }
 
     function selectFilter(e) {
-      console.log(e.target.dataset.filter);
+      if (e.target.dataset.filter === "newest") {
+        sortTitle.value = "Sắp xếp theo mới nhất";
+        tempProducts.value = tempProducts.value.sort((a, b) => {
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+      } else if (e.target.dataset.filter === "oldest") {
+        sortTitle.value = "Sắp xếp theo cũ nhất";
+        tempProducts.value = tempProducts.value.sort((a, b) => {
+          return new Date(a.createdAt) - new Date(b.createdAt);
+        });
+      }
       toggleFilter();
     }
 
@@ -418,6 +430,7 @@ export default {
     });
 
     return {
+      sortTitle,
       products,
       tempProducts,
       currentPage,

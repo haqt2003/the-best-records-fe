@@ -21,7 +21,6 @@ export default createStore({
       },
       avatar: "",
       cart: [],
-      order: [],
     },
     paylist: [],
     payment: "",
@@ -57,7 +56,6 @@ export default createStore({
       state.user.address = payload.data.address;
       state.user.avatar = payload.data.avatar;
       state.user.cart = payload.data.cart;
-      state.user.order = payload.data.order;
     },
     ADD_TO_CART(state, payload) {
       const existingProduct = state.user.cart.find(
