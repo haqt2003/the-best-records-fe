@@ -4,8 +4,13 @@
   <div
     class="max-w-[1440px] px-5 sm:px-[60px] xl:px-[120px] mt-16 mx-auto pb-20"
   >
-    <div class="flex flex-wrap justify-between">
-      <div class="w-full sm:w-[25%]">
+    <h1
+      class="font-[Anton] text-black text-[36px] sm:text-[44px] text-center lg:hidden"
+    >
+      THÔNG TIN CÁ NHÂN
+    </h1>
+    <div class="flex flex-wrap justify-between mt-14 xl:mt-0">
+      <div class="w-full xl:w-[25%]">
         <div class="relative w-[200px] h-[200px] mx-auto">
           <div class="w-[200px] h-[200px] overflow-hidden rounded-full">
             <img :src="avatar" alt="" class="w-full h-full" />
@@ -17,10 +22,10 @@
           />
         </div>
         <div class="mx-auto text-center mt-7">
-          <span class="block font-semibold text-[18px]">{{ name }}</span>
+          <span class="block font-semibold text-[18px]">{{ name1 }}</span>
           <span class="block font-light mt-1">{{ email }}</span>
         </div>
-        <div class="hidden sm:block mt-10">
+        <div class="hidden xl:block mt-10">
           <div class="font-medium">
             <div class="rounded-lg px-8 py-4 cursor-pointer active-box">
               Thông tin cá nhân
@@ -35,8 +40,10 @@
           </div>
         </div>
       </div>
-      <div class="w-full sm:w-[67%]">
-        <h1 class="font-[Anton] text-[40px]">THÔNG TIN CÁ NHÂN</h1>
+      <div class="w-full xl:w-[67%]">
+        <h1 class="font-[Anton] text-[40px] hidden xl:block">
+          THÔNG TIN CÁ NHÂN
+        </h1>
         <form class="mt-9">
           <div class="flex flex-wrap justify-between">
             <div class="w-full flex flex-wrap justify-between">
@@ -45,7 +52,7 @@
                 for="email"
                 class="bg-grey h-[72px] cursor-pointer w-full mt-5 lg:mt-0 lg:w-[48%] px-5 py-3 rounded-lg border-[1px] border-grey block"
               >
-                <span class="text-[14px] opacity-60 block">Họ và tên</span>
+                <span class="text-[14px] opacity-60 block">Email</span>
 
                 <input
                   v-model="email"
@@ -55,32 +62,26 @@
                   id="email"
                   :class="{ activeInput: email }"
                   class="outline-none bg-grey mt-1 font-semibold w-full"
+                  disabled
                 />
               </label>
               <label
-                :class="{ active: password }"
                 for="password"
-                class="bg-grey h-[72px] cursor-pointer w-full mt-5 lg:mt-0 lg:w-[48%] px-5 py-3 rounded-lg border-[1px] border-grey block"
+                class="bg-grey active h-[72px] cursor-pointer w-full mt-5 lg:mt-0 lg:w-[48%] px-5 py-3 rounded-lg border-[1px] border-grey block"
               >
                 <span class="text-[14px] opacity-60 block">Mật khẩu</span>
 
                 <input
                   v-model="password"
-                  @click="clickInput($event)"
-                  @blur="blurInput($event)"
-                  type="password"
-                  name=""
+                  type="text"
                   id="password"
-                  :class="{ activeInput: password }"
-                  class="outline-none bg-grey mt-1 font-semibold w-full"
+                  class="outline-none bg-grey mt-1 activeInput font-semibold w-full"
                   disabled
+                  placeholder="******"
                 />
               </label>
-              <div
-                @click="togglePass"
-                class="cursor-pointer w-full mt-4 text-right font-semibold"
-              >
-                Đổi mật khẩu
+              <div class="cursor-pointer w-full mt-4 text-right font-semibold">
+                <span @click="togglePass">Đổi mật khẩu</span>
               </div>
             </div>
             <label
@@ -273,8 +274,9 @@ export default {
     const avatar = ref(store.state.user.avatar);
 
     const email = ref(store.state.user.email);
-    const password = ref("******");
+    const password = ref(null);
     const name = ref(store.state.user.name);
+    const name1 = name.value;
     const phonenumber = ref(store.state.user.phonenumber);
     const province = ref(store.state.user.address.province);
     const district = ref(store.state.user.address.district);
@@ -360,6 +362,7 @@ export default {
       avatar,
       email,
       password,
+      name1,
       name,
       phonenumber,
       province,

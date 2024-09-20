@@ -4,8 +4,13 @@
   <div
     class="max-w-[1440px] px-5 sm:px-[60px] xl:px-[120px] mt-16 mx-auto pb-20"
   >
-    <div class="flex flex-wrap justify-between">
-      <div class="w-full sm:w-[25%]">
+    <h1
+      class="font-[Anton] text-black text-[36px] sm:text-[44px] text-center lg:hidden"
+    >
+      LỊCH SỬ ĐẶT HÀNG
+    </h1>
+    <div class="flex flex-wrap justify-between mt-14 lg:mt-0">
+      <div class="w-full lg:w-[25%] hidden lg:block">
         <div class="relative w-[200px] h-[200px] mx-auto">
           <div class="w-[200px] h-[200px] overflow-hidden rounded-full">
             <img :src="avatar" alt="" class="w-full h-full" />
@@ -15,7 +20,7 @@
           <span class="block font-semibold text-[18px]">{{ name }}</span>
           <span class="block font-light mt-1">{{ email }}</span>
         </div>
-        <div class="hidden sm:block mt-10">
+        <div class="hidden lg:block mt-10">
           <div class="font-medium">
             <router-link
               to="/user-info"
@@ -30,8 +35,10 @@
           </div>
         </div>
       </div>
-      <div class="w-full sm:w-[67%]">
-        <h1 class="font-[Anton] text-[40px]">LỊCH SỬ ĐẶT HÀNG</h1>
+      <div class="w-full lg:w-[67%]">
+        <h1 class="font-[Anton] text-[40px] hidden lg:block">
+          LỊCH SỬ ĐẶT HÀNG
+        </h1>
       </div>
     </div>
   </div>
