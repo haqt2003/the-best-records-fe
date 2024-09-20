@@ -54,10 +54,10 @@ const routes = [
     beforeEnter: requireAuth,
   },
   {
-    path: "/settings",
-    name: "settings",
+    path: "/history",
+    name: "history",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/Settings.vue"),
+      import(/* webpackChunkName: "about" */ "../views/HistoryOrder.vue"),
     beforeEnter: requireAuth,
   },
   {

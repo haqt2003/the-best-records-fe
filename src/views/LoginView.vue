@@ -7,15 +7,22 @@
     >
       <h1 class="font-[Anton] text-[36px] text-center">ĐĂNG NHẬP</h1>
       <form @submit.prevent="login" action="" class="mt-10">
-        <label for="email" class="font-semibold">Email</label>
-        <input
-          v-model="email"
-          id="email"
-          type="email"
-          placeholder="example@gmail.com"
-          autocomplete="email"
-          class="block outline-none border-b-[0.1px] border-black py-[10px] w-full sm:w-[310px]"
-        />
+        <div class="relative">
+          <label for="email" class="font-semibold">Email</label>
+          <input
+            @input="inputEmail"
+            v-model="email"
+            id="email"
+            type="email"
+            placeholder="example@gmail.com"
+            autocomplete="email"
+            class="block outline-none border-b-[0.1px] border-black py-[10px] w-full sm:w-[310px]"
+          />
+          <span
+            class="mt-4 block text-[14px] hide warnEmail text-red absolute bottom-0 right-0"
+            >Vui lòng nhập email</span
+          >
+        </div>
         <label for="password" class="font-semibold mt-8 block">Mật khẩu</label>
         <div class="relative">
           <input
@@ -87,6 +94,14 @@ export default {
 
     const isShowPassword = ref(false);
 
+    function inputEmail() {
+      if (email.value) {
+        document.querySelector(".warnEmail").classList.add("hide");
+      } else {
+        document.querySelector(".warnEmail").classList.remove("hide");
+      }
+    }
+
     function togglePassword() {
       isShowPassword.value = !isShowPassword.value;
       const passwordField = document.getElementById("password");
@@ -122,7 +137,21 @@ export default {
       }
     };
 
-    return { email, password, isShowPassword, togglePassword, login, callback };
+    return {
+      email,
+      password,
+      isShowPassword,
+      togglePassword,
+      login,
+      callback,
+      inputEmail,
+    };
   },
 };
 </script>
+
+<style scoped>
+.hide {
+  display: none;
+}
+</style>

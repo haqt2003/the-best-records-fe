@@ -124,15 +124,17 @@
               >
             </router-link>
             <router-link
-              to="/settings"
+              to="/history"
               class="h-[38px] hover:bg-grey rounded-[5px] flex items-center pl-4 mt-1"
             >
               <img
-                src="../assets/images/commons/setting-icon.svg"
+                src="../assets/images/commons/order.svg"
                 alt=""
                 class="w-[18px] h-[18px]"
               />
-              <span class="block ml-2 font-medium text-[12px]">Cài đặt</span>
+              <span class="block ml-2 font-medium text-[12px]"
+                >Lịch sử đặt hàng</span
+              >
             </router-link>
             <div
               class="h-[0.5px] bg-[#D9D9D9] w-full absolute left-0 top-[89px]"

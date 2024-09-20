@@ -11,4 +11,10 @@ export default {
       total: data.total,
     });
   },
+  getUserOrders(userID) {
+    return Api().get(`/orders/${userID}`);
+  },
+  getOrder(userID, orderID) {
+    return Api().get(`/orders/${userID}/${orderID}`);
+  },
 };
