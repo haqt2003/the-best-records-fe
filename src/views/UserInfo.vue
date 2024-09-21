@@ -13,13 +13,15 @@
       <div class="w-full xl:w-[25%]">
         <div class="relative w-[200px] h-[200px] mx-auto">
           <div class="w-[200px] h-[200px] overflow-hidden rounded-full">
-            <img :src="avatar" alt="" class="w-full h-full" />
+            <img :src="avatar" alt="" class="w-full h-full object-cover" />
           </div>
-          <img
-            src="../assets/images/user/edit.svg"
-            alt=""
-            class="bottom-3 right-3 absolute cursor-pointer"
-          />
+          <label for="file" class="bottom-3 right-3 absolute"
+            ><img
+              src="../assets/images/user/edit.svg"
+              alt="Avatar"
+              class="cursor-pointer" />
+            <input id="file" @change="onChangeFile" type="file" class="hidden"
+          /></label>
         </div>
         <div class="mx-auto text-center mt-7">
           <span class="block font-semibold text-[18px]">{{ name1 }}</span>
@@ -324,6 +326,7 @@ import HeaderComponent from "@/components/HeaderComponent.vue";
 import BackToTop from "@/components/BackToTop.vue";
 import FooterComponent from "@/components/FooterComponent.vue";
 import axios from "axios";
+import { useStorage } from "@/composables/useStorage";
 export default {
   components: {
     HeaderComponent,
@@ -331,9 +334,11 @@ export default {
     FooterComponent,
   },
   setup() {
+    const { uploadFile } = useStorage();
     const store = useStore();
 
     const avatar = ref(store.state.user.avatar);
+    const file = ref(null);
 
     const email = ref(store.state.user.email);
     const password = ref(null);
@@ -428,6 +433,23 @@ export default {
       input.focus();
     }
 
+    async function onChangeFile(e) {
+      const selected = e.target.files[0];
+      if (selected) {
+        file.value = selected;
+      } else {
+        file.value = null;
+      }
+      if (file.value) {
+        const response = await uploadFile(file.value);
+        await store.dispatch("editAvatar", {
+          id: store.state.user.id,
+          avatar: response,
+        });
+        location.reload();
+      }
+    }
+
     function preSubmit() {
       isOpenModal.value = true;
     }
@@ -485,6 +507,7 @@ export default {
       submit,
       toggleSuccess,
       toggleModal,
+      onChangeFile,
     };
   },
 };

@@ -21,16 +21,25 @@
         <span class="mt-4 block text-[14px] hide warn text-red"
           >Vui lòng nhập tên của bạn</span
         >
-        <label v-if="step === 2" for="email" class="font-semibold">Email</label>
-        <input
-          v-if="step === 2"
-          v-model="email"
-          id="email"
-          type="email"
-          placeholder="example@gmail.com"
-          autocomplete="email"
-          class="block outline-none border-b-[0.1px] border-black py-[10px] w-full sm:w-[310px]"
-        />
+        <div class="relative">
+          <label v-if="step === 2" for="email" class="font-semibold"
+            >Email</label
+          >
+          <input
+            @input="inputEmail"
+            v-if="step === 2"
+            v-model="email"
+            id="email"
+            type="email"
+            placeholder="example@gmail.com"
+            autocomplete="email"
+            class="block outline-none border-b-[0.1px] border-black py-[10px] w-full sm:w-[310px]"
+          />
+          <span
+            class="mt-4 block text-[14px] hide warnEmail text-red absolute bottom-2 right-0"
+            >Vui lòng nhập email</span
+          >
+        </div>
         <label v-if="step === 2" for="password" class="font-semibold mt-8 block"
           >Mật khẩu</label
         >
@@ -59,6 +68,10 @@
               alt=""
             />
           </div>
+          <span
+            class="mt-4 block text-[14px] hide warnPassword text-red absolute bottom-2 right-0"
+            >Vui lòng nhập mật khẩu</span
+          >
         </div>
         <button
           @click="nextStep"
@@ -141,7 +154,28 @@ export default {
       }
     }
 
+    function inputEmail() {
+      if (email.value) {
+        document.querySelector(".warnEmail").classList.add("hide");
+      } else {
+        document.querySelector(".warnEmail").classList.remove("hide");
+      }
+    }
+
+    function inputPassword() {
+      if (password.value) {
+        document.querySelector(".warnPassword").classList.add("hide");
+      } else {
+        document.querySelector(".warnPassword").classList.remove("hide");
+      }
+    }
+
+    function checkInfor() {
+      inputEmail(), inputPassword();
+    }
+
     async function register() {
+      checkInfor();
       try {
         await store.dispatch("register", {
           name: name.value,
@@ -178,6 +212,8 @@ export default {
       register,
       togglePassword,
       callback,
+      inputPassword,
+      inputEmail,
     };
   },
 };

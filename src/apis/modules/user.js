@@ -17,4 +17,9 @@ export default {
       },
     });
   },
+  updateAvatar(userID, data) {
+    return Api().patch(`users/${userID}/avatar`, {
+      avatar: data.avatar,
+    });
+  },
 };

@@ -1,9 +1,6 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.apiKey,
   authDomain: process.env.authDomain,
@@ -13,5 +10,7 @@ const firebaseConfig = {
   appId: process.env.appId,
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const storage = getStorage(app, "gs://the-best-records.appspot.com");
+
+export { storage, getDownloadURL, ref, uploadBytes };

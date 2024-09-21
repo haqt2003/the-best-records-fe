@@ -19,13 +19,14 @@
             class="block outline-none border-b-[0.1px] border-black py-[10px] w-full sm:w-[310px]"
           />
           <span
-            class="mt-4 block text-[14px] hide warnEmail text-red absolute bottom-0 right-0"
+            class="mt-4 block text-[14px] hide warnEmail text-red absolute -bottom-8 right-0"
             >Vui lòng nhập email</span
           >
         </div>
         <label for="password" class="font-semibold mt-8 block">Mật khẩu</label>
         <div class="relative">
           <input
+            @input="inputPassword"
             v-model="password"
             id="password"
             type="password"
@@ -48,7 +49,11 @@
               alt=""
             />
           </div>
-          <span class="block mt-4 text-[14px] ml-auto">Quên mật khẩu?</span>
+          <span
+            class="mt-4 block text-[14px] hide warnPassword text-red absolute -bottom-0 right-0"
+            >Vui lòng nhập mật khẩu</span
+          >
+          <span class="block mt-3 text-[14px] ml-auto">Quên mật khẩu?</span>
         </div>
         <button
           type="submit"
@@ -102,6 +107,14 @@ export default {
       }
     }
 
+    function inputPassword() {
+      if (password.value) {
+        document.querySelector(".warnPassword").classList.add("hide");
+      } else {
+        document.querySelector(".warnPassword").classList.remove("hide");
+      }
+    }
+
     function togglePassword() {
       isShowPassword.value = !isShowPassword.value;
       const passwordField = document.getElementById("password");
@@ -112,7 +125,12 @@ export default {
       }
     }
 
+    function checkInfor() {
+      inputEmail(), inputPassword();
+    }
+
     async function login() {
+      checkInfor();
       try {
         await store.dispatch("login", {
           email: email.value,
@@ -145,6 +163,7 @@ export default {
       login,
       callback,
       inputEmail,
+      inputPassword,
     };
   },
 };

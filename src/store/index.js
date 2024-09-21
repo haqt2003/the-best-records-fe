@@ -197,6 +197,13 @@ export default createStore({
         data: response.data.user,
       });
     },
+    async editAvatar({ commit }, data) {
+      await UserAPI.updateAvatar(data.id, { avatar: data.avatar });
+      const response = await UserAPI.getUser(data.id);
+      commit("SET_USER", {
+        data: response.data.user,
+      });
+    },
     async authGoogle({ commit }, credentials) {
       try {
         const response = await AuthAPI.authGoogle(credentials);
