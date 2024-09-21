@@ -103,7 +103,6 @@ export default createStore({
         detail: "",
       };
       state.user.cart = [];
-      state.user.order = [];
     },
     TOGGLE_TAB(state) {
       state.isOpenTab = !state.isOpenTab;
@@ -180,6 +179,23 @@ export default createStore({
         alert(error.response.data.error.message);
         console.log(error);
       }
+    },
+    async editUser({ commit }, data) {
+      await UserAPI.updateUser(data.id, {
+        name: data.name,
+        phonenumber: data.phonenumber,
+        password: data.password,
+        address: {
+          province: data.address.province,
+          district: data.address.district,
+          ward: data.address.ward,
+          detail: data.address.detail,
+        },
+      });
+      const response = await UserAPI.getUser(data.id);
+      commit("SET_USER", {
+        data: response.data.user,
+      });
     },
     async authGoogle({ commit }, credentials) {
       try {

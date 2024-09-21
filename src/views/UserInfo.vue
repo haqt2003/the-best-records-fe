@@ -35,7 +35,7 @@
               to="/history"
               class="px-8 py-4 cursor-pointer rounded-lg block"
             >
-              Lịch sử mua hàng
+              Lịch sử đặt hàng
             </router-link>
           </div>
         </div>
@@ -44,7 +44,7 @@
         <h1 class="font-[Anton] text-[40px] hidden xl:block">
           THÔNG TIN CÁ NHÂN
         </h1>
-        <form class="mt-9">
+        <form @submit.prevent="preSubmit" class="mt-9">
           <div class="flex flex-wrap justify-between">
             <div class="w-full flex flex-wrap justify-between">
               <label
@@ -96,7 +96,6 @@
                 @click="clickInput($event)"
                 @blur="blurInput($event)"
                 type="tel"
-                name=""
                 id="name"
                 :class="{ activeInput: name }"
                 class="outline-none bg-grey mt-1 font-semibold w-full"
@@ -114,7 +113,6 @@
                 @click="clickInput($event)"
                 @blur="blurInput($event)"
                 type="tel"
-                name=""
                 id="phonenumber"
                 :class="{ activeInput: phonenumber }"
                 class="outline-none bg-grey mt-1 font-semibold w-full"
@@ -235,7 +233,6 @@
                 @click="clickInput($event)"
                 @blur="blurInput($event)"
                 type="text"
-                name=""
                 id="addr"
                 placeholder="VD: 140 Trần Phú, Quận Hà Đông, Hà Nội"
                 :class="{ activeInput: detail }"
@@ -244,11 +241,76 @@
             </label>
           </div>
           <button
+            type="submit"
             class="mx-auto bg-yellow hover:bg-yellowHover w-[180px] h-[60px] rounded-lg font-semibold block mt-9"
           >
             Lưu
           </button>
         </form>
+      </div>
+    </div>
+  </div>
+  <div
+    v-if="isOpenModal"
+    class="fixed top-0 left-0 w-full h-full px-5 bg-[rgba(0,0,0,0.4)] z-50"
+  >
+    <div
+      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] sm:w-[70%] max-w-[400px] bg-white rounded-xl py-9"
+    >
+      <img
+        src="../assets/images/commons/close.svg"
+        alt=""
+        class="w-8 absolute top-5 right-5 cursor-pointer"
+        @click="toggleModal"
+      />
+      <div class="text-center mt-10">
+        <span class="block">Lưu thay đổi?</span>
+        <div class="flex justify-center items-center gap-5 mt-8">
+          <span
+            @click="toggleModal"
+            class="px-8 cursor-pointer block rounded-lg"
+            >Hủy</span
+          >
+          <button
+            @click="submit"
+            class="bg-yellow hover:bg-yellowHover rounded-lg px-8 py-3"
+          >
+            Lưu
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    v-if="isSuccess !== null"
+    class="fixed top-0 left-0 w-full h-full px-5 bg-[rgba(0,0,0,0.4)] z-50"
+  >
+    <div
+      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] sm:w-[70%] max-w-[400px] bg-white rounded-xl py-9"
+    >
+      <img
+        src="../assets/images/commons/close.svg"
+        alt=""
+        class="w-8 absolute top-5 right-5 cursor-pointer"
+        @click="toggleSuccess"
+      />
+      <div v-if="isSuccess" class="text-center mt-10">
+        <span class="block">Lưu thành công!</span>
+        <button
+          @click="toggleSuccess"
+          class="bg-yellow hover:bg-yellowHover rounded-lg px-5 py-3 mt-6 font-semibold"
+        >
+          OK
+        </button>
+      </div>
+      <div v-if="isSuccess === false" class="text-center mt-10">
+        <span class="block">Lưu thất bại!</span>
+        <button
+          @click="toggleSuccess"
+          class="bg-yellow hover:bg-yellowHover rounded-lg px-5 py-3 mt-6 font-semibold"
+        >
+          OK
+        </button>
       </div>
     </div>
   </div>
@@ -276,7 +338,7 @@ export default {
     const email = ref(store.state.user.email);
     const password = ref(null);
     const name = ref(store.state.user.name);
-    const name1 = name.value;
+    const name1 = ref(store.state.user.name);
     const phonenumber = ref(store.state.user.phonenumber);
     const province = ref(store.state.user.address.province);
     const district = ref(store.state.user.address.district);
@@ -286,6 +348,17 @@ export default {
     const provinces = ref(null);
     const districts = ref(null);
     const wards = ref(null);
+
+    const isOpenModal = ref(false);
+    const isSuccess = ref(null);
+
+    function toggleSuccess() {
+      isSuccess.value = null;
+    }
+
+    function toggleModal() {
+      isOpenModal.value = !isOpenModal.value;
+    }
 
     async function getProvince() {
       try {
@@ -355,10 +428,38 @@ export default {
       input.focus();
     }
 
+    function preSubmit() {
+      isOpenModal.value = true;
+    }
+
+    async function submit() {
+      try {
+        await store.dispatch("editUser", {
+          id: store.state.user.id,
+          name: name.value,
+          phonenumber: phonenumber.value,
+          password: password.value,
+          address: {
+            province: province.value,
+            district: district.value,
+            ward: ward.value,
+            detail: detail.value,
+          },
+        });
+        name1.value = store.state.user.name;
+        isSuccess.value = true;
+      } catch (error) {
+        isSuccess.value = false;
+      }
+      toggleModal();
+    }
+
     onMounted(async () => {
       await getProvince();
     });
     return {
+      isOpenModal,
+      isSuccess,
       avatar,
       email,
       password,
@@ -380,6 +481,10 @@ export default {
       choseDistrict,
       choseWard,
       togglePass,
+      preSubmit,
+      submit,
+      toggleSuccess,
+      toggleModal,
     };
   },
 };
