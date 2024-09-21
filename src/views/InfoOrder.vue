@@ -312,6 +312,7 @@
 <script>
 import { ref, onMounted, computed } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import axios from "axios";
 import HeaderComponent from "@/components/HeaderComponent.vue";
 import BackToTop from "@/components/BackToTop.vue";
@@ -324,6 +325,7 @@ export default {
     FooterComponent,
   },
   setup() {
+    const router = useRouter();
     const store = useStore();
 
     const name = ref(store.state.user.name);
@@ -350,6 +352,7 @@ export default {
 
     function toggleSuccess() {
       isSuccess.value = null;
+      router.push("/products");
     }
 
     async function getProvince() {
