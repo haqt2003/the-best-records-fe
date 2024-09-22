@@ -29,7 +29,7 @@
     </div>
     <div class="flex gap-4 sm:gap-5 justify-end">
       <div class="cursor-pointer hidden sm:block">
-        <img
+        <!-- <img
           v-if="!isSearch"
           @click="toggleSearch"
           src="../assets/images/commons/search-icon-black.svg"
@@ -50,7 +50,7 @@
             placeholder="Search..."
             class="text-[#222] text-[12px] font-light outline-none bg-grey ml-2"
           />
-        </div>
+        </div> -->
       </div>
       <router-link to="/cart" class="cursor-pointer relative" @click="goCart">
         <img
@@ -166,7 +166,7 @@ export default {
   setup() {
     const route = useRoute();
     const store = useStore();
-    const isSearch = ref(false);
+    // const isSearch = ref(false);
     const isUser = getToken();
     const isShowMenu = ref(false);
 
@@ -195,9 +195,9 @@ export default {
       document.querySelector(".store-link").style.opacity = 0.6;
     }
 
-    function toggleSearch() {
-      isSearch.value = !isSearch.value;
-    }
+    // function toggleSearch() {
+    //   isSearch.value = !isSearch.value;
+    // }
 
     function toggleMenu() {
       isShowMenu.value = !isShowMenu.value;
@@ -220,7 +220,7 @@ export default {
     );
 
     return {
-      isSearch,
+      // isSearch,
       isShowMenu,
       isUser,
       avatar,
@@ -229,7 +229,7 @@ export default {
       goCart,
       logout,
       toggleMenu,
-      toggleSearch,
+      // toggleSearch,
       openTab,
     };
   },
