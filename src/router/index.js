@@ -68,6 +68,27 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/LoginView.vue"),
   },
   {
+    path: "/forgot-password",
+    name: "forgotPassword",
+
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/ForgotPassword.vue"),
+  },
+  {
+    path: "/confirm-code",
+    name: "confirmCode",
+
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/ConfirmCode.vue"),
+  },
+  {
+    path: "/new-password",
+    name: "newPassword",
+
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/NewPassword.vue"),
+  },
+  {
     path: "/signup",
     name: "signup",
     component: () =>

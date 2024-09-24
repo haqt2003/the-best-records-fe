@@ -53,7 +53,11 @@
             class="mt-4 block text-[14px] hide warnPassword text-red absolute -bottom-0 right-0"
             >Vui lòng nhập mật khẩu</span
           >
-          <span class="block mt-3 text-[14px] ml-auto">Quên mật khẩu?</span>
+          <router-link
+            to="/forgot-password"
+            class="block mt-3 text-[14px] ml-auto"
+            >Quên mật khẩu?</router-link
+          >
         </div>
         <button
           type="submit"
