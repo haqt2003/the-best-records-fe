@@ -38,16 +38,52 @@
       </form>
     </div>
   </div>
+  <div
+    v-if="isSuccess !== null"
+    class="fixed top-0 left-0 w-full h-full px-5 bg-[rgba(0,0,0,0.4)] z-50"
+  >
+    <div
+      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] sm:w-[70%] max-w-[400px] bg-white rounded-xl py-9"
+    >
+      <div v-if="isSuccess" class="text-center mt-10">
+        <span class="block">Đổi mật khẩu thành công!</span>
+        <button
+          @click="toggleSuccess"
+          class="bg-yellow hover:bg-yellowHover rounded-lg px-5 py-3 mt-6 font-semibold"
+        >
+          OK
+        </button>
+      </div>
+      <div v-if="isSuccess === false" class="text-center mt-10">
+        <span class="block">Đổi mật khẩu thất bại!</span>
+        <button
+          @click="toggleSuccess"
+          class="bg-yellow hover:bg-yellowHover rounded-lg px-5 py-3 mt-6 font-semibold"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import AuthAPI from "@/apis/modules/auth";
 export default {
   setup() {
+    const route = useRoute();
     const router = useRouter();
 
     const password = ref("");
+
+    const isSuccess = ref(null);
+
+    function toggleSuccess() {
+      if (isSuccess.value === true) router.push("/login");
+      isSuccess.value = null;
+    }
 
     function inputPassword() {
       if (password.value) {
@@ -57,12 +93,30 @@ export default {
       }
     }
 
-    function submitPassword() {
+    async function submitPassword() {
       inputPassword();
-      router.push("/new-password");
+      if (password.value) {
+        try {
+          const response = await AuthAPI.newPassword({
+            email: route.query.email,
+            password: password.value,
+          });
+          if (response) {
+            isSuccess.value = true;
+          }
+        } catch (error) {
+          isSuccess.value = false;
+        }
+      }
     }
 
-    return { password, inputPassword, submitPassword };
+    return {
+      password,
+      isSuccess,
+      inputPassword,
+      submitPassword,
+      toggleSuccess,
+    };
   },
 };
 </script>

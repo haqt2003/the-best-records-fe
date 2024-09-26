@@ -19,4 +19,21 @@ export default {
       access_token: data,
     });
   },
+  forgotPassword(email) {
+    return Api().post("users/forgot-password", {
+      email: email,
+    });
+  },
+  confirmCode(data) {
+    return Api().post("users/confirm-code", {
+      email: data.email,
+      code: data.code,
+    });
+  },
+  newPassword(data) {
+    return Api().post("users/new-password", {
+      email: data.email,
+      password: data.password,
+    });
+  },
 };

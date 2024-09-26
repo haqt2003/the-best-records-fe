@@ -45,6 +45,7 @@
 <script>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import AuthAPI from "@/apis/modules/auth";
 export default {
   setup() {
     const router = useRouter();
@@ -59,9 +60,16 @@ export default {
       }
     }
 
-    function submitEmail() {
+    async function submitEmail() {
       inputEmail();
-      router.push("/confirm-code");
+      if (email.value) {
+        const response = await AuthAPI.forgotPassword(email.value);
+        if (response)
+          router.push({
+            path: "/confirm-code",
+            query: { email: email.value },
+          });
+      }
     }
     return { email, inputEmail, submitEmail };
   },

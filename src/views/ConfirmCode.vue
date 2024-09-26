@@ -20,7 +20,7 @@
             @input="inputCode"
             v-model="code"
             id="code"
-            type="code"
+            type="text"
             autocomplete="code"
             class="block outline-none border-b-[0.1px] border-black py-[10px] w-full sm:w-[310px]"
           />
@@ -42,9 +42,11 @@
 
 <script>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
+import AuthAPI from "@/apis/modules/auth";
 export default {
   setup() {
+    const route = useRoute();
     const router = useRouter();
 
     const code = ref("");
@@ -57,9 +59,19 @@ export default {
       }
     }
 
-    function submitCode() {
+    async function submitCode() {
       inputCode();
-      router.push("/new-password");
+      if (code.value) {
+        const response = await AuthAPI.confirmCode({
+          email: route.query.email,
+          code: String(code.value),
+        });
+        if (response)
+          router.push({
+            path: "/new-password",
+            query: { email: route.query.email },
+          });
+      }
     }
 
     return { code, inputCode, submitCode };

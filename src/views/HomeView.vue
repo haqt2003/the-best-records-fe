@@ -76,8 +76,11 @@
             alt=""
             class="w-8 sm:w-9"
           />
-          <div v-if="avatar" class="w-8 sm:w-9 rounded-full overflow-hidden">
-            <img :src="avatar" alt="" />
+          <div
+            v-if="avatar"
+            class="w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden"
+          >
+            <img :src="avatar" alt="" class="object-cover w-full h-full" />
           </div>
           <div
             v-if="!isUser && isShowMenu"
