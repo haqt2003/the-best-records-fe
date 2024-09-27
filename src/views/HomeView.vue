@@ -394,15 +394,15 @@ export default {
     const tempProducts = ref([]);
 
     const images = [
-      require("@/assets/images/home/1.jpg"),
-      require("@/assets/images/home/2.jpg"),
-      require("@/assets/images/home/3.jpg"),
-      require("@/assets/images/home/4.jpg"),
-      require("@/assets/images/home/5.jpg"),
-      require("@/assets/images/home/6.jpg"),
-      require("@/assets/images/home/7.jpg"),
-      require("@/assets/images/home/8.jpg"),
-      require("@/assets/images/home/9.jpg"),
+      "https://firebasestorage.googleapis.com/v0/b/the-best-records.appspot.com/o/home%2F1.jpg?alt=media&token=8e6ed735-1b52-4224-b5b6-cc952c8a7054",
+      "https://firebasestorage.googleapis.com/v0/b/the-best-records.appspot.com/o/home%2F2.jpg?alt=media&token=17e22219-9873-46c1-8eb8-1b771992844d",
+      "https://firebasestorage.googleapis.com/v0/b/the-best-records.appspot.com/o/home%2F3.jpg?alt=media&token=702bce55-4f23-479e-ac24-6287f425ae14",
+      "https://firebasestorage.googleapis.com/v0/b/the-best-records.appspot.com/o/home%2F4.jpg?alt=media&token=8325abb3-2814-4b4e-88d2-8546a85a00b1",
+      "https://firebasestorage.googleapis.com/v0/b/the-best-records.appspot.com/o/home%2F5.jpg?alt=media&token=3c7d1d70-ad8d-42a5-b322-c8a6274394cb",
+      "https://firebasestorage.googleapis.com/v0/b/the-best-records.appspot.com/o/home%2F6.jpg?alt=media&token=f564d9af-8148-466b-8bc7-4793cbc5903c",
+      "https://firebasestorage.googleapis.com/v0/b/the-best-records.appspot.com/o/home%2F7.jpg?alt=media&token=4b8222c2-7d56-456e-ac46-faf21a1a7f4c",
+      "https://firebasestorage.googleapis.com/v0/b/the-best-records.appspot.com/o/home%2F8.jpg?alt=media&token=a8a2bcd3-dcb1-47e7-a014-cf4b2e0a138d",
+      "https://firebasestorage.googleapis.com/v0/b/the-best-records.appspot.com/o/home%2F9.jpg?alt=media&token=db0633c3-100d-4db1-9d3e-ec8f6ed65e99",
     ];
 
     const totalCartItems = computed(() =>
