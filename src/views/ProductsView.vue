@@ -311,7 +311,9 @@ export default {
     const paginateProducts = computed(() => {
       const start = (currentPage.value - 1) * itemsPerPage.value;
       const end = start + itemsPerPage.value;
-      return tempProducts.value.slice(start, end);
+      return tempProducts.value.length
+        ? tempProducts.value.slice(start, end)
+        : tempProducts.value;
     });
 
     const isOpenFilter = ref(false);
