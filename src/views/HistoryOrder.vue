@@ -13,7 +13,18 @@
       <div class="w-full lg:w-[25%] hidden lg:block">
         <div class="relative w-[200px] h-[200px] mx-auto">
           <div class="w-[200px] h-[200px] overflow-hidden rounded-full">
-            <img :src="avatar" alt="" class="w-full h-full object-cover" />
+            <img
+              v-if="!avatar"
+              src="../assets/images/commons/user-big.svg"
+              alt=""
+              class="w-full h-full object-cover"
+            />
+            <img
+              v-if="avatar"
+              :src="avatar"
+              alt=""
+              class="w-full h-full object-cover"
+            />
           </div>
         </div>
         <div class="mx-auto text-center mt-7">

@@ -32,12 +32,39 @@
         </div>
 
         <button
+          v-if="!isPending"
           type="submit"
           class="sm:w-[310px] w-full bg-yellow rounded-xl mt-7 font-semibold h-[56px] hover:bg-yellowHover"
         >
           Gửi mã xác minh
         </button>
+        <button
+          v-if="isPending"
+          type="button"
+          disabled
+          class="sm:w-[310px] w-full bg-yellow rounded-xl mt-7 font-semibold h-[56px] hover:bg-yellowHover"
+        >
+          Đang xử lý...
+        </button>
       </form>
+    </div>
+  </div>
+  <div
+    v-if="isSuccess !== null"
+    class="fixed top-0 left-0 w-full h-full px-5 bg-[rgba(0,0,0,0.4)] z-50"
+  >
+    <div
+      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] sm:w-[70%] max-w-[400px] bg-white rounded-xl py-9"
+    >
+      <div v-if="isSuccess === false" class="text-center mt-10">
+        <span class="block">Bạn chưa có tài khoản!</span>
+        <button
+          @click="toggleSuccess"
+          class="bg-yellow hover:bg-yellowHover rounded-lg px-5 py-3 mt-6 font-semibold"
+        >
+          OK
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -51,6 +78,14 @@ export default {
     const router = useRouter();
 
     const email = ref("");
+    const isPending = ref(null);
+
+    const isSuccess = ref(null);
+
+    function toggleSuccess() {
+      if (isSuccess.value === true) router.push("/login");
+      isSuccess.value = null;
+    }
 
     function inputEmail() {
       if (email.value) {
@@ -62,16 +97,30 @@ export default {
 
     async function submitEmail() {
       inputEmail();
-      if (email.value) {
-        const response = await AuthAPI.forgotPassword(email.value);
-        if (response)
-          router.push({
-            path: "/confirm-code",
-            query: { email: email.value },
-          });
+      isPending.value = true;
+      try {
+        if (email.value) {
+          const response = await AuthAPI.forgotPassword(email.value);
+          if (response)
+            router.push({
+              path: "/confirm-code",
+              query: { email: email.value },
+            });
+        }
+      } catch (error) {
+        isSuccess.value = false;
+      } finally {
+        isPending.value = false;
       }
     }
-    return { email, inputEmail, submitEmail };
+    return {
+      email,
+      isPending,
+      isSuccess,
+      inputEmail,
+      submitEmail,
+      toggleSuccess,
+    };
   },
 };
 </script>
