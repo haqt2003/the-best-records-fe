@@ -165,8 +165,8 @@
         THE BEST RECORDS
       </h1>
       <span class="block text-white w-[78%] xl:w-[70%] mx-auto"
-        >Lorem ipsum dolor sit amet consectetur. Cras eu pulvinar et sed arcu.
-        Augue id risus morbi rhoncus placerat elementum.
+        >Khám phá thế giới âm nhạc đầy hoài niệm với đĩa than chất lượng - nơi
+        mỗi bản nhạc mang lại cảm xúc chân thật và những kỷ niệm sống động!
       </span>
       <div class="flex gap-10 items-center justify-center mt-4">
         <a href=""><img src="../assets/images/abouts/fb.svg" alt="" /></a>
@@ -342,10 +342,10 @@
         HÌNH ẢNH <span class="text-yellow">NỔI BẬT</span>
       </h1>
       <p
-        class="mx-auto lg:mt-3 text-center w-[90%] xl:w-[30%] text-[14px] xl:text-[16px]"
+        class="mx-auto lg:mt-3 text-center w-[90%] xl:w-[33%] text-[14px] xl:text-[16px]"
       >
-        Trở về quá khứ cùng với chiếc đĩa than, kết hợp trong nó là những bản
-        nhạc hiện đại đầy sôi động
+        Đắm chìm trong từng giai điệu, tạo nên những khoảnh khắc kết nối âm nhạc
+        và cảm xúc thật gần gũi.
       </p>
       <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 mt-4 xl:mt-[60px]">
         <div

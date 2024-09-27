@@ -353,7 +353,6 @@ export default {
 
     const getProducts = async () => {
       const response = await ProductAPI.getProductList();
-      console.log(response.data.products);
       products.value = response.data.products;
       tempProducts.value = products.value;
     };

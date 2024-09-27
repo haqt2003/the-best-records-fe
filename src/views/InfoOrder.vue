@@ -457,6 +457,12 @@ export default {
           },
           total: payment.value,
         });
+        payList.value.forEach((item) => {
+          store.dispatch("deleteItemFromCart", {
+            userID: store.state.user.id,
+            productID: item.product._id,
+          });
+        });
         if (response.data.success === "true") {
           isSuccess.value = true;
         }
