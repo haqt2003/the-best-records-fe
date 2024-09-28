@@ -425,7 +425,7 @@ export default {
 
     onMounted(async () => {
       await getProducts();
-      updateItemsPerPage();
+      await updateItemsPerPage();
     });
 
     return {
