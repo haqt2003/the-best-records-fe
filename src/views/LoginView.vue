@@ -3,7 +3,7 @@
     class="w-screen h-screen overflow-hidden relative bg-cover bg-no-repeat bg-[url('@/assets/images/login/bg.svg')]"
   >
     <div
-      class="absolute top-1/2 -translate-y-1/2 left-1/2 sm:left-auto sm:-translate-x-0 -translate-x-1/2 sm:right-[15%] py-10 px-10 sm:py-12 sm:px-14 bg-white rounded-xl w-[88%] sm:w-auto"
+      class="absolute top-1/2 -translate-y-1/2 left-1/2 sm:left-auto sm:-translate-x-0 -translate-x-1/2 sm:right-[15%] py-9 px-10 sm:py-12 sm:px-14 bg-white rounded-xl w-[88%] sm:w-auto"
     >
       <h1 class="font-[Anton] text-[36px] text-center">ĐĂNG NHẬP</h1>
       <form @submit.prevent="login" action="" class="mt-10">
