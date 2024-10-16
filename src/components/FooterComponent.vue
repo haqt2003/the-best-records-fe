@@ -57,7 +57,9 @@
         </div>
         <a href="" class="block mt-3 lg:mt-4">Phương thức thanh toán</a>
         <a href="" class="block mt-3 lg:mt-4">Hoàn trả</a>
-        <a href="" class="block mt-3 lg:mt-4">Chính sách pháp lý</a>
+        <router-link to="/policy" class="block mt-3 lg:mt-4"
+          >Chính sách pháp lý</router-link
+        >
       </div>
       <img
         src="../assets/images/commons/img-footer.svg"

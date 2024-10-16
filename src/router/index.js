@@ -94,6 +94,12 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/SignupView.vue"),
   },
+  {
+    path: "/policy",
+    name: "policy",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/PrivacyPolicy.vue"),
+  },
 ];
 
 const router = createRouter({
